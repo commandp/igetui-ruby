@@ -113,6 +113,18 @@ module IGeTui
       ret['result'] == 'ok' ? ret['contentId'] : ''
     end
 
+    def get_apn_content_id(message)
+      template = message.data
+      data = {
+       action: 'apnGetContentIdAction',
+       appId: app_id,
+       appkey: app_key,
+       PI: template.get_apns_push
+      }
+      ret = http_post_json(data)
+      ret['result'] == 'ok' ? ret['contentId'] : ''
+    end
+
     def cancel_content_id(content_id)
       data = {
         'action' => 'cancleContentIdAction',

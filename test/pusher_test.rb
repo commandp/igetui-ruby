@@ -76,6 +76,13 @@ class PusherTest < MiniTest::Unit::TestCase
     assert_equal ret["result"], "ok"
   end
 
+  def test_get_apn_content_id
+    single_message = IGeTui::SingleMessage.new
+    single_message.data = notification_template
+    apn_content_id = @pusher.get_apn_content_id(single_message)
+    assert apn_content_id
+  end
+
   private
 
   def set_template_base_info(template)
