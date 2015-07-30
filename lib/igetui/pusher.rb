@@ -27,6 +27,18 @@ module IGeTui
       http_post_json(data)
     end
 
+    def push_message_to_apns(message, device_token)
+      template = message.data
+      data = {
+       action: 'apnPushToSingleAction',
+       appId: app_id,
+       appkey: app_key,
+       DT: device_token,
+       PI: template.get_apns_push
+      }
+      http_post_json(data)
+    end
+
     def push_message_to_list(content_id, clients)
       target_list = clients.inject([]) do |list, cilent|
         list << { 'appId' => app_id, 'clientId' => cilent.client_id }

@@ -103,6 +103,24 @@ ret = pusher.push_message_to_app(app_message)
 p ret
 ```
 
+### Push Message To APNS(iOS)
+```ruby
+pusher = IGeTui.pusher(your_app_id, your_app_key, your_master_secret)
+
+# 创建通知模板
+template = IGeTui::NotificationTemplate.new
+template.set_push_info("open", 1, 'test message', nil)
+
+# 创建单体消息
+single_message = IGeTui::SingleMessage.new
+single_message.data = template
+
+# 发送一条通知到指定的客户端(iOS)
+# device_toekn 為 ios app 向 APNS 註冊的 取得的 token
+ret = pusher.push_message_to_apns(single_message, device_toekn)
+p ret
+
+```
 ### Custom Test
 
 ```ruby
