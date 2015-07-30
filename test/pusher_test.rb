@@ -83,6 +83,17 @@ class PusherTest < MiniTest::Unit::TestCase
     assert apn_content_id
   end
 
+  def test_to_push_apns_list
+    single_message = IGeTui::SingleMessage.new
+    single_message.data = notification_template
+    apn_content_id = @pusher.get_apn_content_id(single_message)
+
+    device_token_list = [@device_token]
+    ret = @pusher.push_message_to_apns_list(apn_content_id, device_token_list)
+
+    assert_equal ret["result"], "ok"
+  end
+
   private
 
   def set_template_base_info(template)
@@ -103,7 +114,7 @@ class PusherTest < MiniTest::Unit::TestCase
   def notification_template
     template = IGeTui::NotificationTemplate.new
     set_template_base_info(template)
-    template.set_push_info("open", 1, 'message', nil, { deeplink: 'deeplink://' })
+    template.set_push_info("open", 1, "message Time is :#{Time.now}", nil, { deeplink: 'deeplink://' })
     template
   end
 
