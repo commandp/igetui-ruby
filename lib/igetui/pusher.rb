@@ -27,6 +27,32 @@ module IGeTui
       http_post_json(data)
     end
 
+    def push_message_to_apns(message, device_token)
+      template = message.data
+      data = {
+       action: 'apnPushToSingleAction',
+       appId: app_id,
+       appkey: app_key,
+       DT: device_token,
+       PI: template.get_apns_push
+      }
+      http_post_json(data)
+    end
+
+    # device_token_list need is a Array
+    # device_token_list = ['xxxx', 'zzzz']
+    def push_message_to_apns_list(apn_content_id, device_token_list)
+      data = {
+       action: 'apnPushToListAction',
+       appId: app_id,
+       appkey: app_key,
+       DTL: device_token_list,
+       contentId: apn_content_id,
+       needDetails: true
+      }
+      http_post_json(data)
+    end
+
     def push_message_to_list(content_id, clients)
       target_list = clients.inject([]) do |list, cilent|
         list << { 'appId' => app_id, 'clientId' => cilent.client_id }
@@ -96,6 +122,18 @@ module IGeTui
         'isOffline' => message.is_offline,
         'offlineExpireTime' => message.offline_expire_time,
         'pushType' => template.get_push_type
+      }
+      ret = http_post_json(data)
+      ret['result'] == 'ok' ? ret['contentId'] : ''
+    end
+
+    def get_apn_content_id(message)
+      template = message.data
+      data = {
+       action: 'apnGetContentIdAction',
+       appId: app_id,
+       appkey: app_key,
+       PI: template.get_apns_push
       }
       ret = http_post_json(data)
       ret['result'] == 'ok' ? ret['contentId'] : ''
